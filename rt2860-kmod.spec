@@ -3,14 +3,14 @@
 # "buildforkernels newest" macro for just that build; immediately after
 # queuing that build enable the macro again for subsequent builds; that way
 # a new akmod package will only get build when a new one is actually needed
-%define buildforkernels newest
+#define buildforkernels newest
 
 %define SourceDir 2008_0708_RT2860_Linux_STA_v1.7.0.0
 %define _default_patch_fuzz 2
 
 Name:           rt2860-kmod
 Version:        1.7.0
-Release:        5%{?dist}.1
+Release:        6%{?dist}.1
 Summary:        Kernel module for RaLink 802.11 wireless devices rt2760/rt2790/rt2860/rt2890
 
 Group:          System Environment/Kernel
@@ -26,7 +26,8 @@ Patch4:         rt2860-net-namespace-separation.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 # needed for plague to make sure it builds for i586 and i686
-ExclusiveArch:  i586 i686 x86_64 ppc64
+ExclusiveArch:  i586 i686 x86_64
+# disabled hy knurd on 20081002 as they fail: ppc ppc64
 
 # get the needed BuildRequires (in parts depending on what we build for)
 BuildRequires:  %{_bindir}/kmodtool
@@ -84,7 +85,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Tue Oct 02 2008 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> 1.7.0-5
+* Tue Oct 02 2008 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> 1.7.0-6.1
+- disable ppc ppc64; both fail 
+
+* Tue Oct 02 2008 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> 1.7.0-5.1
 - rebuild for RPM Fusion
 
 * Sun Sep 21 2008 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> 1.7.0-4
