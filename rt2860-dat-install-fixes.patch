@@ -1,0 +1,30 @@
+diff -u -r 2008_0708_RT2860_Linux_STA_v1.7.0.0/os/linux/Makefile.6 2008_0708_RT2860_Linux_STA_v1.7.0.0.new/os/linux/Makefile.6
+--- 2008_0708_RT2860_Linux_STA_v1.7.0.0/os/linux/Makefile.6	2008-06-30 20:18:02.000000000 -0500
++++ 2008_0708_RT2860_Linux_STA_v1.7.0.0.new/os/linux/Makefile.6	2008-08-29 11:59:46.000000000 -0500
+@@ -1,7 +1,7 @@
+ include $(RT28xx_DIR)/os/linux/config.mk
+ 
+ MOD_NAME = rt$(CHIPSET)sta
+-DAT_PATH = /etc/Wireless/RT$(CHIPSET)STA
++DAT_PATH = $(DAT_PREFIX)/etc/Wireless/RT$(CHIPSET)STA
+ DAT_FILE_NAME = RT$(CHIPSET)STA.dat
+ 
+ obj-m := $(MOD_NAME).o
+@@ -75,15 +75,11 @@
+ 	rm -f ../../sta/.*.{cmd,flags,d}
+ 
+ install:
+-	rm -rf $(DAT_PATH)
+-	$(shell [ ! -f /etc/Wireless ] && mkdir /etc/Wireless)
+-	mkdir $(DAT_PATH)
+-	cp $(RT28xx_DIR)/$(DAT_FILE_NAME) $(DAT_PATH)/.
++	install -d $(DAT_PATH)
++	install -m 644 $(RT28xx_DIR)/$(DAT_FILE_NAME) $(DAT_PATH)
+ 	install -d $(LINUX_SRC_MODULE)
+ 	install -m 644 -c $(addsuffix .ko,$(MOD_NAME)) $(LINUX_SRC_MODULE)
+-	/sbin/depmod -a ${shell uname -r}
+ 
+ uninstall:
+ #	rm -rf $(DAT_PATH)
+ 	rm -rf $(addprefix $(LINUX_SRC_MODULE),$(addsuffix .ko,$(MOD_NAME)))
+-	/sbin/depmod -a ${shell uname -r}
