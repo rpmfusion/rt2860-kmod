@@ -1,0 +1,12 @@
+diff -rupN old/2008_0918_RT2860_Linux_STA_v1.8.0.0/os/linux/sta_ioctl.c new/2008_0918_RT2860_Linux_STA_v1.8.0.0/os/linux/sta_ioctl.c
+--- old/2008_0918_RT2860_Linux_STA_v1.8.0.0/os/linux/sta_ioctl.c	2008-09-25 04:28:00.000000000 -0400
++++ new/2008_0918_RT2860_Linux_STA_v1.8.0.0/os/linux/sta_ioctl.c	2008-10-04 16:15:19.000000000 -0400
+@@ -49,7 +49,7 @@ extern ULONG    RTDebugLevel;
+ 
+ #define GROUP_KEY_NO                4
+ 
+-#if LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,27)
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,25)
+ #define IWE_STREAM_ADD_EVENT(_A, _B, _C, _D, _E)		iwe_stream_add_event(_A, _B, _C, _D, _E)
+ #define IWE_STREAM_ADD_POINT(_A, _B, _C, _D, _E)		iwe_stream_add_point(_A, _B, _C, _D, _E)
+ #define IWE_STREAM_ADD_VALUE(_A, _B, _C, _D, _E, _F)	iwe_stream_add_value(_A, _B, _C, _D, _E, _F)
