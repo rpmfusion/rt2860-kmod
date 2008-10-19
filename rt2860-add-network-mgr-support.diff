@@ -1,7 +1,6 @@
-diff -u -r 2008_0708_RT2860_Linux_STA_v1.7.0.0/os/linux/config.mk 2008_0708_RT2860_Linux_STA_v1.7.0.0.new/os/linux/config.mk
---- 2008_0708_RT2860_Linux_STA_v1.7.0.0/os/linux/config.mk	2008-07-07 09:37:50.000000000 -0500
-+++ 2008_0708_RT2860_Linux_STA_v1.7.0.0.new/os/linux/config.mk	2008-08-28 17:54:07.000000000 -0500
-@@ -5,10 +5,10 @@
+--- old/2008_0918_RT2860_Linux_STA_v1.8.0.0/os/linux/config.mk	2008-09-25 04:25:42.000000000 -0400
++++ new/2008_0918_RT2860_Linux_STA_v1.8.0.0/os/linux/config.mk	2008-10-04 16:39:05.000000000 -0400
+@@ -5,10 +5,10 @@ HAS_ATE=n
  HAS_28xx_QA=n
  
  # Support Wpa_Supplicant
