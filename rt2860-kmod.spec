@@ -10,7 +10,7 @@
 
 Name:           rt2860-kmod
 Version:        1.7.0
-Release:        6%{?dist}.1
+Release:        6%{?dist}.2
 Summary:        Kernel module for RaLink 802.11 wireless devices rt2760/rt2790/rt2860/rt2890
 
 Group:          System Environment/Kernel
@@ -86,6 +86,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Oct 19 2008 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 1.7.0-6.2
+- rebuild for latest rawhide kernel
+
 * Tue Oct 02 2008 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> 1.7.0-6.1
 - disable ppc ppc64; both fail 
 
