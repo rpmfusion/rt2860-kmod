@@ -7,7 +7,7 @@
 
 Name:		rt2860-kmod
 Version:	1.8.0.0
-Release:	1%{?dist}.1
+Release:	1%{?dist}.2
 Summary:	Kernel module for RaLink 802.11 wireless devices rt2760/rt2790/rt2860/rt2890
 
 Group:		System Environment/Kernel
@@ -24,9 +24,7 @@ BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:	%{_bindir}/kmodtool
 
 # needed for plague to make sure it builds for i586 and i686
-ExclusiveArch:  i586 i686 x86_64
-# ppc and ppc64 disabled by knurd on 20081003 as it is known to fail on 2.6.27:
-# https://bugzilla.redhat.com/show_bug.cgi?id=465486
+ExclusiveArch:  i586 i686 x86_64 ppc ppc64
 
 %{!?kernels:BuildRequires: buildsys-build-rpmfusion-kerneldevpkgs-%{?buildforkernels:%{buildforkernels}}%{!?buildforkernels:current}-%{_target_cpu} }
 
@@ -73,6 +71,9 @@ chmod 0755 $RPM_BUILD_ROOT/%{kmodinstdir_prefix}/*/%{kmodinstdir_postfix}/*
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Sun Oct 26 2008 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 1.8.0.0-1.2
+- rebuild for latest rawhide kernel; enable ppc and ppc64 again
+
 * Sun Oct 19 2008 Orcan Ogetbil <orcanbahri[at]yahoo[com]> 1.8.0.0-1.1
 - update strip-tftpboot-copy.patch to match rt2860 sources with no fuzziness
 - revert the patch names to the old versions
