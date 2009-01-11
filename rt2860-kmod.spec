@@ -3,11 +3,11 @@
 # "buildforkernels newest" macro for just that build; immediately after
 # queuing that build enable the macro again for subsequent builds; that way
 # a new akmod package will only get build when a new one is actually needed
-%define buildforkernels newest
+#%%define buildforkernels newest
 
 Name:		rt2860-kmod
 Version:	1.8.0.0
-Release:	2%{?dist}.1
+Release:	3%{?dist}
 Summary:	Kernel module for RaLink 802.11 wireless devices rt2760/rt2790/rt2860/rt2890
 
 Group:		System Environment/Kernel
@@ -19,6 +19,7 @@ Source11:	rt2860-kmodtool-excludekernel-filterfile
 Patch1:		rt2860-dat-install-fixes.patch
 Patch2:		rt2860-add-network-mgr-support.diff
 Patch3:		rt2860-remove-tftpboot-copy.patch
+Patch5:		rt2860-2.6.29-compile.patch
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:	%{_bindir}/kmodtool
@@ -50,6 +51,11 @@ kmodtool --target %{_target_cpu}  --repo rpmfusion --kmodname %{name} --filterfi
 
 for kernel_version in %{?kernel_versions} ; do
  cp -a *RT2860_Linux_STA* _kmod_build_${kernel_version%%___*}
+ pushd _kmod_build_${kernel_version%%___*}
+  if [[ $kernel_version > "2.6.29" ]]; then
+%patch5 -p2 -b .2.6.29
+  fi
+ popd
 done
 
 %build
@@ -70,6 +76,9 @@ chmod 0755 $RPM_BUILD_ROOT/%{kmodinstdir_prefix}/*/%{kmodinstdir_postfix}/*
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Sun Jan 11 2009 Orcan Ogetbil <oget [DOT] fedora [AT] gmail [DOT] com> - 1.8.0.0-3
+- Add a patch for compilation against kernels >= 2.6.29
+
 * Sat Dec 20 2008 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 1.8.0.0-2.1
 - rebuild for latest Fedora kernel;
 
