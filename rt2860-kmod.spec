@@ -7,7 +7,7 @@
 
 Name:		rt2860-kmod
 Version:	1.8.0.0
-Release:	1%{?dist}.12
+Release:	1%{?dist}.13
 Summary:	Kernel module for RaLink 802.11 wireless devices rt2760/rt2790/rt2860/rt2890
 
 Group:		System Environment/Kernel
@@ -71,6 +71,9 @@ chmod 0755 $RPM_BUILD_ROOT/%{kmodinstdir_prefix}/*/%{kmodinstdir_postfix}/*
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Wed Mar 25 2009 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 1.8.0.0-1.13
+- rebuild for new kernels
+
 * Thu Feb 26 2009 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 1.8.0.0-1.12
 - rebuild for latest Fedora kernel;
 
