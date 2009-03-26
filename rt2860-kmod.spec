@@ -3,11 +3,11 @@
 # "buildforkernels newest" macro for just that build; immediately after
 # queuing that build enable the macro again for subsequent builds; that way
 # a new akmod package will only get build when a new one is actually needed
-%define buildforkernels newest
+#%%define buildforkernels newest
 
 Name:		rt2860-kmod
 Version:	1.8.0.0
-Release:	1%{?dist}.13
+Release:	1%{?dist}.14
 Summary:	Kernel module for RaLink 802.11 wireless devices rt2760/rt2790/rt2860/rt2890
 
 Group:		System Environment/Kernel
@@ -15,10 +15,12 @@ License:	GPLv2+
 URL:		http://www.ralinktech.com/ralink/Home/Support/Linux.html
 Source0:	http://www.ralinktech.com.tw/data/drivers/2008_0918_RT2860_Linux_STA_v1.8.0.0.tar.bz2
 Source11:	rt2860-kmodtool-excludekernel-filterfile
-Patch0:         rt2860-2.6.25-iwe_stream-fix.diff
-Patch1:         rt2860-dat-install-fixes.patch
-Patch2:         rt2860-add-network-mgr-support.diff
-Patch3:         rt2860-remove-tftpboot-copy.patch
+
+Patch1:		rt2860-dat-install-fixes.patch
+Patch2:		rt2860-add-network-mgr-support.diff
+Patch3:		rt2860-remove-tftpboot-copy.patch
+Patch4:		rt2860-no2.4-in-kernelversion.patch
+Patch5:		rt2860-2.6.29-compile.patch
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:	%{_bindir}/kmodtool
@@ -44,13 +46,18 @@ kmodtool --target %{_target_cpu}  --repo rpmfusion --kmodname %{name} --filterfi
 
 %setup -q -c -T -a 0
 
-%patch0 -p1 -b .iwestream
 %patch1 -p1 -b .rpmbuild
 %patch2 -p1 -b .NetworkManager
-%patch3 -p1 -b .tftpboot
+%patch3 -p0 -b .tftpboot
+%patch4 -p0 -b .no24
 
 for kernel_version in %{?kernel_versions} ; do
  cp -a *RT2860_Linux_STA* _kmod_build_${kernel_version%%___*}
+ pushd _kmod_build_${kernel_version%%___*}
+  if [[ $kernel_version > "2.6.29" ]]; then
+%patch5 -p2 -b .2.6.29
+  fi
+ popd
 done
 
 %build
@@ -71,6 +78,10 @@ chmod 0755 $RPM_BUILD_ROOT/%{kmodinstdir_prefix}/*/%{kmodinstdir_postfix}/*
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Thu Mar 26 2009 Orcan Ogetbil <oget [DOT] fedora [AT] gmail [DOT] com> - 1.8.0.0-1.14
+- Bugfix: kmod doesn't compile when the kernel version has a "2.4" substring
+- Add 2.6.29 compilation patch (just in case)
+
 * Wed Mar 25 2009 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 1.8.0.0-1.13
 - rebuild for new kernels
 
@@ -107,11 +118,11 @@ rm -rf $RPM_BUILD_ROOT
 * Thu Oct 23 2008 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 1.8.0.0-1.2
 - rebuild for latest kernel; enable ppc again
 
-* Sun Oct 19 2008 Orcan Ogetbil <orcanbahri[at]yahoo[com]> 1.8.0.0-1.1
+* Sun Oct 19 2008 Orcan Ogetbil <oget [DOT] fedora [AT] gmail [DOT] com>  1.8.0.0-1.1
 - update strip-tftpboot-copy.patch to match rt2860 sources with no fuzziness
 - revert the patch names to the old versions
 
-* Sun Oct 19 2008 Orcan Ogetbil <orcanbahri[at]yahoo[com]> 1.8.0.0-1
+* Sun Oct 19 2008 Orcan Ogetbil <oget [DOT] fedora [AT] gmail [DOT] com>  1.8.0.0-1
 - version update (1.8.0.0)
 - patches taken from rt2870-kmod directly
 
