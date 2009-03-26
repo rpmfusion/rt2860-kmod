@@ -7,7 +7,7 @@
 
 Name:		rt2860-kmod
 Version:	1.8.0.0
-Release:	3%{?dist}.4
+Release:	3%{?dist}.5
 Summary:	Kernel module for RaLink 802.11 wireless devices rt2760/rt2790/rt2860/rt2890
 
 Group:		System Environment/Kernel
@@ -19,6 +19,7 @@ Source11:	rt2860-kmodtool-excludekernel-filterfile
 Patch1:		rt2860-dat-install-fixes.patch
 Patch2:		rt2860-add-network-mgr-support.diff
 Patch3:		rt2860-remove-tftpboot-copy.patch
+Patch4:		rt2860-no2.4-in-kernelversion.patch
 Patch5:		rt2860-2.6.29-compile.patch
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -47,7 +48,8 @@ kmodtool --target %{_target_cpu}  --repo rpmfusion --kmodname %{name} --filterfi
 
 %patch1 -p1 -b .rpmbuild
 %patch2 -p1 -b .NetworkManager
-%patch3 -p1 -b .tftpboot
+%patch3 -p0 -b .tftpboot
+%patch4 -p0 -b .no24
 
 for kernel_version in %{?kernel_versions} ; do
  cp -a *RT2860_Linux_STA* _kmod_build_${kernel_version%%___*}
@@ -76,6 +78,9 @@ chmod 0755 $RPM_BUILD_ROOT/%{kmodinstdir_prefix}/*/%{kmodinstdir_postfix}/*
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Thu Mar 26 2009 Orcan Ogetbil <oget [DOT] fedora [AT] gmail [DOT] com> - 1.8.0.0-3.5
+- Bugfix: kmod doesn't compile when the kernel version has a "2.4" substring
+
 * Wed Mar 25 2009 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 1.8.0.0-3.4
 - rebuild for new kernels
 
