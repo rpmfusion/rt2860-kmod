@@ -3,11 +3,11 @@
 # "buildforkernels newest" macro for just that build; immediately after
 # queuing that build enable the macro again for subsequent builds; that way
 # a new akmod package will only get build when a new one is actually needed
-%define buildforkernels newest
+#define buildforkernels newest
 
 Name:		rt2860-kmod
 Version:	1.8.0.0
-Release:	4%{?dist}.6
+Release:	4%{?dist}.7
 Summary:	Kernel module for RaLink 802.11 wireless devices rt2760/rt2790/rt2860/rt2890
 
 Group:		System Environment/Kernel
@@ -78,6 +78,9 @@ chmod 0755 $RPM_BUILD_ROOT/%{kmodinstdir_prefix}/*/%{kmodinstdir_postfix}/*
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Sun Apr 05 2009 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 1.8.0.0-4.7
+- rebuild for new kernels
+
 * Sun Mar 29 2009 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 1.8.0.0-4.6
 - rebuild for new F11 features
 
