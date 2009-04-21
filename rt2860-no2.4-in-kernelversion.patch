@@ -1,6 +1,6 @@
---- 2008_0918_RT2860_Linux_STA_v1.8.0.0.old/os/linux/config.mk	2008-09-17 23:27:46.000000000 -0400
-+++ 2008_0918_RT2860_Linux_STA_v1.8.0.0/os/linux/config.mk	2009-03-26 03:02:19.000000000 -0400
-@@ -223,14 +223,7 @@ export CFLAGS
+--- DPO_RT2860_LinuxSTA_V2.1.0.0.old/os/linux/config.mk	2009-04-20 21:30:17.000000000 -0400
++++ DPO_RT2860_LinuxSTA_V2.1.0.0/os/linux/config.mk	2009-04-20 21:31:04.000000000 -0400
+@@ -235,14 +235,7 @@ export CFLAGS
  endif
  
  ifeq ($(PLATFORM),PC)
