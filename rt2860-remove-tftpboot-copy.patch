@@ -1,34 +1,18 @@
---- 2008_0918_RT2860_Linux_STA_v1.8.0.0.old/Makefile	2008-09-17 22:26:56.000000000 -0400
-+++ 2008_0918_RT2860_Linux_STA_v1.8.0.0/Makefile	2009-03-26 03:00:09.000000000 -0400
-@@ -122,57 +122,20 @@ build_tools:
+--- DPO_RT2860_LinuxSTA_V2.1.0.0.old/Makefile	2009-03-25 03:50:55.000000000 -0400
++++ DPO_RT2860_LinuxSTA_V2.1.0.0/Makefile	2009-04-20 21:29:18.000000000 -0400
+@@ -134,41 +134,20 @@ UCOS:
  
  
  LINUX:
 -ifneq (,$(findstring 2.4,$(LINUX_SRC)))
 -	cp -f os/linux/Makefile.4 $(RT28xx_DIR)/os/linux/Makefile
 -	make -C $(RT28xx_DIR)/os/linux/
--ifeq ($(RT28xx_MODE),AP)
--	cp -f $(RT28xx_DIR)/os/linux/rt$(CHIPSET)ap.o /tftpboot
--else	
--ifeq ($(RT28xx_MODE),APSTA)
--	cp -f $(RT28xx_DIR)/os/linux/rt$(CHIPSET)apsta.o /tftpboot
--else
 -	cp -f $(RT28xx_DIR)/os/linux/rt$(CHIPSET)sta.o /tftpboot
--endif	
--endif	
 -else
  	cp -f os/linux/Makefile.6 $(RT28xx_DIR)/os/linux/Makefile
  	make  -C  $(LINUX_SRC) SUBDIRS=$(RT28xx_DIR)/os/linux modules
--ifeq ($(RT28xx_MODE),AP)
--	cp -f $(RT28xx_DIR)/os/linux/rt$(CHIPSET)ap.ko /tftpboot
--else	
--ifeq ($(RT28xx_MODE),APSTA)
--	cp -f $(RT28xx_DIR)/os/linux/rt$(CHIPSET)apsta.ko /tftpboot
--else
 -	cp -f $(RT28xx_DIR)/os/linux/rt$(CHIPSET)sta.ko /tftpboot
 -endif	
--endif
--endif
  
  clean:
  ifeq ($(TARGET), LINUX)
