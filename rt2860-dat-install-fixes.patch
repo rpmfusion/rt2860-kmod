@@ -1,8 +1,8 @@
-diff -rupN old/2008_0918_RT2860_Linux_STA_v1.8.0.0/os/linux/Makefile.4 new/2008_0918_RT2860_Linux_STA_v1.8.0.0/os/linux/Makefile.4
---- old/2008_0918_RT2860_Linux_STA_v1.8.0.0/os/linux/Makefile.4	2008-09-18 04:12:12.000000000 -0400
-+++ new/2008_0918_RT2860_Linux_STA_v1.8.0.0/os/linux/Makefile.4	2008-10-04 16:51:37.000000000 -0400
+diff -rupN DPO_RT2860_LinuxSTA_V2.1.0.0.old/os/linux/Makefile.4 DPO_RT2860_LinuxSTA_V2.1.0.0/os/linux/Makefile.4
+--- DPO_RT2860_LinuxSTA_V2.1.0.0.old/os/linux/Makefile.4	2009-03-25 03:42:46.000000000 -0400
++++ DPO_RT2860_LinuxSTA_V2.1.0.0/os/linux/Makefile.4	2009-04-20 21:21:26.000000000 -0400
 @@ -1,8 +1,6 @@
- include $(RT28xx_DIR)/os/linux/config.mk 
+ include $(RT28xx_DIR)/os/linux/config.mk
  
  MOD_NAME = rt$(CHIPSET)sta
 -DAT_PATH = /etc/Wireless/RT$(CHIPSET)STA
@@ -10,7 +10,7 @@ diff -rupN old/2008_0918_RT2860_Linux_STA_v1.8.0.0/os/linux/Makefile.4 new/2008_
  
  OBJ := $(MOD_NAME).o
  
-@@ -78,15 +76,12 @@ clean:
+@@ -93,15 +91,10 @@ clean:
  	rm -f $(RT28xx_DIR)/sta/.*.{cmd,flags,d}
  
  install:
@@ -21,20 +21,18 @@ diff -rupN old/2008_0918_RT2860_Linux_STA_v1.8.0.0/os/linux/Makefile.4 new/2008_
 -	install -d $(LINUX_SRC_MODULE)
 -	install -m 644 -c $(addsuffix .o,$(MOD_NAME)) $(LINUX_SRC_MODULE)
 -	/sbin/depmod -a ${shell uname -r}
-+	#install -d $(LINUX_SRC_MODULE)
-+	#install -m 644 -c $(addsuffix .o,$(MOD_NAME)) $(LINUX_SRC_MODULE)
 +	mkdir -p $(INST_DIR)
-+	install -d $(INST_DIR)
-+	install -m 644 -c $(addsuffix .ko,$(MOD_NAME))  $(INST_DIR)
-+	#/sbin/depmod -a ${shell uname -r}
++	install -m 644 -c $(addsuffix .ko,$(MOD_NAME)) $(INST_DIR)
  
  uninstall:
--#	rm -rf $(DAT_PATH)
+ #	rm -rf $(DAT_PATH)
 -	rm -rf $(addprefix $(LINUX_SRC_MODULE),$(addsuffix .o,$(MOD_NAME)))
- 	/sbin/depmod -a ${shell uname -r}
-diff -rupN old/2008_0918_RT2860_Linux_STA_v1.8.0.0/os/linux/Makefile.6 new/2008_0918_RT2860_Linux_STA_v1.8.0.0/os/linux/Makefile.6
---- old/2008_0918_RT2860_Linux_STA_v1.8.0.0/os/linux/Makefile.6	2008-09-18 04:12:42.000000000 -0400
-+++ new/2008_0918_RT2860_Linux_STA_v1.8.0.0/os/linux/Makefile.6	2008-10-04 16:50:54.000000000 -0400
+-	/sbin/depmod -a ${shell uname -r}
++	rm -rf $(addprefix $(INST_DIR),$(addsuffix .o,$(MOD_NAME)))
++
+diff -rupN DPO_RT2860_LinuxSTA_V2.1.0.0.old/os/linux/Makefile.6 DPO_RT2860_LinuxSTA_V2.1.0.0/os/linux/Makefile.6
+--- DPO_RT2860_LinuxSTA_V2.1.0.0.old/os/linux/Makefile.6	2009-03-25 03:43:06.000000000 -0400
++++ DPO_RT2860_LinuxSTA_V2.1.0.0/os/linux/Makefile.6	2009-04-20 21:22:45.000000000 -0400
 @@ -1,8 +1,6 @@
  include $(RT28xx_DIR)/os/linux/config.mk
  
@@ -44,7 +42,7 @@ diff -rupN old/2008_0918_RT2860_Linux_STA_v1.8.0.0/os/linux/Makefile.6 new/2008_
  
  obj-m := $(MOD_NAME).o
  
-@@ -77,15 +75,11 @@ clean:
+@@ -88,15 +86,10 @@ clean:
  	rm -f ../../sta/.*.{cmd,flags,d}
  
  install:
@@ -55,13 +53,12 @@ diff -rupN old/2008_0918_RT2860_Linux_STA_v1.8.0.0/os/linux/Makefile.6 new/2008_
 -	install -d $(LINUX_SRC_MODULE)
 -	install -m 644 -c $(addsuffix .ko,$(MOD_NAME)) $(LINUX_SRC_MODULE)
 -	/sbin/depmod -a ${shell uname -r}
--
 +	mkdir -p $(INST_DIR)
-+	install -d $(INST_DIR)
-+	#install -m 644 -c $(addsuffix .ko,$(MOD_NAME)) $(LINUX_SRC_MODULE)
-+	install -m 644 -c $(addsuffix .ko,$(MOD_NAME))  $(INST_DIR)
-+	#/sbin/depmod -a ${shell uname -r}
++	install -m 644 -c $(addsuffix .ko,$(MOD_NAME)) $(INST_DIR)
+ 
  uninstall:
--#	rm -rf $(DAT_PATH)
- 	rm -rf $(addprefix $(LINUX_SRC_MODULE),$(addsuffix .ko,$(MOD_NAME)))
- 	/sbin/depmod -a ${shell uname -r}
+ #	rm -rf $(DAT_PATH)
+-	rm -rf $(addprefix $(LINUX_SRC_MODULE),$(addsuffix .ko,$(MOD_NAME)))
+-	/sbin/depmod -a ${shell uname -r}
++	rm -rf $(addprefix $(INST_DIR),$(addsuffix .ko,$(MOD_NAME)))
++
