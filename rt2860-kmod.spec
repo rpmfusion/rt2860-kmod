@@ -3,17 +3,17 @@
 # "buildforkernels newest" macro for just that build; immediately after
 # queuing that build enable the macro again for subsequent builds; that way
 # a new akmod package will only get build when a new one is actually needed
-%define buildforkernels newest
+#define buildforkernels newest
 
 Name:		rt2860-kmod
-Version:	2.1.0.0
-Release:	1%{?dist}.1
+Version:	2.1.1.0
+Release:	1%{?dist}
 Summary:	Kernel module for RaLink 802.11 wireless devices rt2760/rt2790/rt2860/rt2890
 
 Group:		System Environment/Kernel
 License:	GPLv2+
 URL:		http://www.ralinktech.com/ralink/Home/Support/Linux.html
-Source0:	http://www.ralinktech.com.tw/data/drivers/2009_0420_RT2860_Linux_STA_V2.1.0.0.tar.gz
+Source0:	http://www.ralinktech.com.tw/data/drivers/2009_0424_RT2860_Linux_STA_V%{version}.tgz
 Source11:	rt2860-kmodtool-excludekernel-filterfile
 
 Patch1:		rt2860-dat-install-fixes.patch
@@ -45,17 +45,19 @@ kmodtool --target %{_target_cpu}  --repo rpmfusion --kmodname %{name} --filterfi
 
 %setup -q -c -T -a 0
 
-%patch1 -p0 -b .rpmbuild
-%patch2 -p0 -b .NetworkManager
-%patch3 -p0 -b .tftpboot
-%patch4 -p0 -b .no24
+pushd *RT2860*Linux*STA*
+%patch1 -p1 -b .rpmbuild
+%patch2 -p1 -b .NetworkManager
+%patch3 -p1 -b .tftpboot
+%patch4 -p1 -b .no24
+popd
 
 # Fix weird permissions
 find . -name "*.c" -exec chmod -x {} \;
 find . -name "*.h" -exec chmod -x {} \;
 
 for kernel_version in %{?kernel_versions} ; do
- cp -a *RT2860_Linux*STA* _kmod_build_${kernel_version%%___*}
+ cp -a *RT2860*Linux*STA* _kmod_build_${kernel_version%%___*}
 done
 
 %build
@@ -76,6 +78,9 @@ chmod 0755 $RPM_BUILD_ROOT/%{kmodinstdir_prefix}/*/%{kmodinstdir_postfix}/*
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Sun Apr 26 2009 Orcan Ogetbil <oget [DOT] fedora [AT] gmail [DOT] com> - 2.1.1.0-1
+- version update (2.1.1.0)
+
 * Sun Apr 26 2009 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.1.0.0-1.1
 - rebuild for new kernels
 
