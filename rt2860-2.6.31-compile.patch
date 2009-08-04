@@ -1,0 +1,113 @@
+diff -rupN 2009_0521_RT2870_Linux_STA_V2.1.2.0.old/include/rtmp_os.h 2009_0521_RT2870_Linux_STA_V2.1.2.0/include/rtmp_os.h
+--- 2009_0521_RT2870_Linux_STA_V2.1.2.0.old/include/rtmp_os.h	2009-04-23 05:40:41.000000000 -0400
++++ 2009_0521_RT2870_Linux_STA_V2.1.2.0/include/rtmp_os.h	2009-08-02 19:46:07.000000000 -0400
+@@ -59,6 +59,7 @@
+ */
+ typedef struct _RTMP_OS_NETDEV_OP_HOOK_
+ {
++  /*
+ 	void			*open;
+ 	void			*stop;
+ 	void			*xmit;
+@@ -69,6 +70,8 @@ typedef struct _RTMP_OS_NETDEV_OP_HOOK_
+ 	unsigned char devAddr[6];
+ 	unsigned char	devName[16];
+ 	unsigned char	needProtcted;
++  */
++  struct net_device_ops *netdev_ops;
+ }RTMP_OS_NETDEV_OP_HOOK, *PRTMP_OS_NETDEV_OP_HOOK;
+ 
+ 
+diff -rupN 2009_0521_RT2870_Linux_STA_V2.1.2.0.old/os/linux/rt_linux.c 2009_0521_RT2870_Linux_STA_V2.1.2.0/os/linux/rt_linux.c
+--- 2009_0521_RT2870_Linux_STA_V2.1.2.0.old/os/linux/rt_linux.c	2009-04-23 05:55:24.000000000 -0400
++++ 2009_0521_RT2870_Linux_STA_V2.1.2.0/os/linux/rt_linux.c	2009-08-02 20:32:09.000000000 -0400
+@@ -1505,20 +1505,22 @@ int RtmpOSNetDevAttach(
+ 		PRTMP_ADAPTER pAd = NULL;
+ 	
+ 		GET_PAD_FROM_NET_DEV(pAd, pNetDev);	
++		pNetDev->netdev_ops = pDevOpHook->netdev_ops;
++		/*
+ 		pNetDev->open			= pDevOpHook->open;
+ 		pNetDev->stop			= pDevOpHook->stop;
+ 		pNetDev->hard_start_xmit	= (HARD_START_XMIT_FUNC)(pDevOpHook->xmit);
+ 		pNetDev->do_ioctl		= pDevOpHook->ioctl;
+-		
++		*/		
+ 		/* if you don't implement get_stats, just leave the callback function as NULL, a dummy 
+ 		     function will make kernel panic.
+ 		*/
+-		if (pDevOpHook->get_stats)
++		/*if (pDevOpHook->get_stats)
+ 			pNetDev->get_stats = pDevOpHook->get_stats;
+-
++		  */
+ 		/* OS specific flags, here we used to indicate if we are virtual interface */
+-		pNetDev->priv_flags = pDevOpHook->priv_flags; 
+-
++		//		pNetDev->priv_flags = pDevOpHook->priv_flags; 
++											     
+ #if (WIRELESS_EXT < 21) && (WIRELESS_EXT >= 12)
+ 		pNetDev->get_wireless_stats = rt28xx_get_wireless_stats;
+ #endif
+@@ -1542,15 +1544,15 @@ int RtmpOSNetDevAttach(
+ #endif // CONFIG_APSTA_MIXED_SUPPORT //
+ 
+ 		// copy the net device mac address to the net_device structure.
+-		NdisMoveMemory(pNetDev->dev_addr, &pDevOpHook->devAddr[0], MAC_ADDR_LEN);
++		//NdisMoveMemory(pNetDev->dev_addr, &pDevOpHook->devAddr[0], MAC_ADDR_LEN);
+ 
+-		rtnl_locked = pDevOpHook->needProtcted;
++		//rtnl_locked = pDevOpHook->needProtcted;
+ 	}
+-
++	/*
+ #if LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,24)
+ 	pNetDev->validate_addr = NULL;
+ #endif
+-
++	*/
+ 	if (rtnl_locked)
+ 		ret = register_netdevice(pNetDev);
+ 	else
+diff -rupN 2009_0521_RT2870_Linux_STA_V2.1.2.0.old/os/linux/rt_main_dev.c 2009_0521_RT2870_Linux_STA_V2.1.2.0/os/linux/rt_main_dev.c
+--- 2009_0521_RT2870_Linux_STA_V2.1.2.0.old/os/linux/rt_main_dev.c	2009-04-23 05:40:40.000000000 -0400
++++ 2009_0521_RT2870_Linux_STA_V2.1.2.0/os/linux/rt_main_dev.c	2009-08-02 19:38:35.000000000 -0400
+@@ -501,6 +501,20 @@ err:
+ 	return (-1);
+ } /* End of rt28xx_open */
+ 
++static const struct net_device_ops rt2870_netdev_ops = {
++  .ndo_open               = MainVirtualIF_open,//
++  .ndo_stop               = MainVirtualIF_close,//
++  .ndo_do_ioctl           = rt28xx_ioctl,//
++  .ndo_get_stats          = RT28xx_get_ether_stats,//
++  .ndo_validate_addr      = NULL,
++  .ndo_set_mac_address    = eth_mac_addr,
++  .ndo_change_mtu         = eth_change_mtu,
++#ifdef IKANOS_VX_1X0
++  .ndo_start_xmit         = IKANOS_DataFramesTx,//
++#else
++  .ndo_start_xmit         = rt28xx_send_packets,//
++#endif
++};
+ 
+ PNET_DEV RtmpPhyNetDevInit(
+ 	IN RTMP_ADAPTER *pAd,
+@@ -517,6 +531,8 @@ PNET_DEV RtmpPhyNetDevInit(
+ 	}
+ 
+ 	NdisZeroMemory((unsigned char *)pNetDevHook, sizeof(RTMP_OS_NETDEV_OP_HOOK));
++	pNetDevHook->netdev_ops = &rt2870_netdev_ops;
++	/*
+ 	pNetDevHook->open = MainVirtualIF_open;
+ 	pNetDevHook->stop = MainVirtualIF_close;
+ 	pNetDevHook->xmit = rt28xx_send_packets;
+@@ -528,7 +544,7 @@ PNET_DEV RtmpPhyNetDevInit(
+ 	pNetDevHook->get_stats = RT28xx_get_ether_stats;
+ 
+ 	pNetDevHook->needProtcted = FALSE;
+-
++	*/
+ #if LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,29)
+ 	net_dev->ml_priv = (PVOID)pAd;
+ #else

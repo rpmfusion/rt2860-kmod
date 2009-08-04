@@ -7,7 +7,7 @@
 
 Name:		rt2860-kmod
 Version:	2.1.2.0
-Release:	1%{?dist}.3
+Release:	2%{?dist}
 Summary:	Kernel module for RaLink 802.11 wireless devices rt2760/rt2790/rt2860/rt2890
 
 Group:		System Environment/Kernel
@@ -20,6 +20,7 @@ Patch1:		rt2860-dat-install-fixes.patch
 Patch2:		rt2860-add-network-mgr-support.diff
 Patch3:		rt2860-remove-tftpboot-copy.patch
 Patch4:		rt2860-no2.4-in-kernelversion.patch
+Patch5:		rt2860-2.6.31-compile.patch
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:	%{_bindir}/kmodtool
@@ -50,6 +51,7 @@ pushd *RT2860*Linux*STA*
 %patch2 -p1 -b .NetworkManager
 %patch3 -p1 -b .tftpboot
 %patch4 -p1 -b .no24
+%patch5 -p1 -b .2.6.31
 popd
 
 # Fix weird permissions
@@ -78,6 +80,9 @@ chmod 0755 $RPM_BUILD_ROOT/%{kmodinstdir_prefix}/*/%{kmodinstdir_postfix}/*
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Mon Aug 03 2009 Orcan Ogetbil <oget [DOT] fedora [AT] gmail [DOT] com> - 2.1.2.0-2
+- Fix for kernels >= 2.6.31
+
 * Fri Jun 05 2009 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.1.2.0-1.3
 - rebuild for final F11 kernel
 
