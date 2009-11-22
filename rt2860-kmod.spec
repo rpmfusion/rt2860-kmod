@@ -7,7 +7,7 @@
 
 Name:		rt2860-kmod
 Version:	2.1.2.0
-Release:	3%{?dist}.6
+Release:	3%{?dist}.7
 Summary:	Kernel module for RaLink 802.11 wireless devices rt2760/rt2790/rt2860/rt2890
 
 Group:		System Environment/Kernel
@@ -25,9 +25,6 @@ Patch6:		rt2860-suppress-flood.patch
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:	%{_bindir}/kmodtool
-
-# needed for plague to make sure it builds for i586 and i686
-ExclusiveArch:	i586 i686 x86_64 ppc ppc64
 
 %{!?kernels:BuildRequires: buildsys-build-rpmfusion-kerneldevpkgs-%{?buildforkernels:%{buildforkernels}}%{!?buildforkernels:current}-%{_target_cpu} }
 
@@ -82,6 +79,9 @@ chmod 0755 $RPM_BUILD_ROOT/%{kmodinstdir_prefix}/*/%{kmodinstdir_postfix}/*
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Sun Nov 22 2009 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.1.2.0-3.7
+- rebuild for new kernel, disable i586 builds
+
 * Tue Nov 10 2009 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.1.2.0-3.6
 - rebuild for F12 release kernel
 
