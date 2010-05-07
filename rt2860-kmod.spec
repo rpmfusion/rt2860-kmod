@@ -3,24 +3,23 @@
 # "buildforkernels newest" macro for just that build; immediately after
 # queuing that build enable the macro again for subsequent builds; that way
 # a new akmod package will only get build when a new one is actually needed
-%define buildforkernels newest
+#define buildforkernels newest
 
 Name:		rt2860-kmod
-Version:	2.1.2.0
-Release:	3%{?dist}.11
+Version:	2.3.0.0
+Release:	1%{?dist}
 Summary:	Kernel module for RaLink 802.11 wireless devices rt2760/rt2790/rt2860/rt2890
 
 Group:		System Environment/Kernel
 License:	GPLv2+
-URL:		http://www.ralinktech.com/ralink/Home/Support/Linux.html
-Source0:	http://www.ralinktech.com.tw/data/drivers/2009_0521_RT2860_Linux_STA_V%{version}.tgz
+URL:		http://www.ralinktech.com/support.php?s=2
+# No direct downloads anymore. See the above link.
+Source0:	2010_01_29_RT2860_Linux_STA_v2.3.0.0.tar.bz2
 Source11:	rt2860-kmodtool-excludekernel-filterfile
 
 Patch1:		rt2860-dat-install-fixes.patch
 Patch2:		rt2860-add-network-mgr-support.diff
-Patch3:		rt2860-remove-tftpboot-copy.patch
 Patch4:		rt2860-no2.4-in-kernelversion.patch
-Patch5:		rt2860-2.6.31-compile.patch
 Patch6:		rt2860-suppress-flood.patch
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -32,7 +31,7 @@ BuildRequires:	%{_bindir}/kmodtool
 %{expand:%(kmodtool --target %{_target_cpu} --repo rpmfusion --kmodname %{name} --filterfile %{SOURCE11} %{?buildforkernels:--%{buildforkernels}} %{?kernels:--for-kernels "%{?kernels}"} 2>/dev/null) }
 
 %description
-This package contains the Ralink Driver for WiFi, a linux device
+This package contains the Ralink Driver for WiFi, a Linux device
 driver for 802.11a/b/g universal NIC cards - either PCI, PCIe or
 MiniPCI - that use Ralink chipsets (rt2760, rt2790, rt2860, rt2890).
 
@@ -47,15 +46,9 @@ kmodtool --target %{_target_cpu}  --repo rpmfusion --kmodname %{name} --filterfi
 pushd *RT2860*Linux*STA*
 %patch1 -p1 -b .rpmbuild
 %patch2 -p1 -b .NetworkManager
-%patch3 -p1 -b .tftpboot
 %patch4 -p1 -b .no24
-%patch5 -p1 -b .2.6.31
 %patch6 -p1 -b .messageflood
 popd
-
-# Fix weird permissions
-find . -name "*.c" -exec chmod -x {} \;
-find . -name "*.h" -exec chmod -x {} \;
 
 for kernel_version in %{?kernel_versions} ; do
  cp -a *RT2860*Linux*STA* _kmod_build_${kernel_version%%___*}
@@ -79,6 +72,9 @@ chmod 0755 $RPM_BUILD_ROOT/%{kmodinstdir_prefix}/*/%{kmodinstdir_postfix}/*
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Fri May 07 2010 Orcan Ogetbil <oget [DOT] fedora [AT] gmail [DOT] com> - 2.3.0.0-1
+- version update (2.3.0.0)
+
 * Fri May 07 2010 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 2.1.2.0-3.11
 - rebuild for new kernel
 
