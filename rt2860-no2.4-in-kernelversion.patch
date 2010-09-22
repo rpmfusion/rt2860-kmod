@@ -1,7 +1,7 @@
-diff -rupN 2010_01_29_RT2860_Linux_STA_v2.3.0.0.old/Makefile 2010_01_29_RT2860_Linux_STA_v2.3.0.0/Makefile
---- 2010_01_29_RT2860_Linux_STA_v2.3.0.0.old/Makefile	2009-12-23 01:15:08.000000000 -0500
-+++ 2010_01_29_RT2860_Linux_STA_v2.3.0.0/Makefile	2010-04-22 02:39:52.000000000 -0400
-@@ -176,13 +176,6 @@ test:
+diff -rupN 2010_07_16_RT2860_Linux_STA_v2.4.0.0.old/Makefile 2010_07_16_RT2860_Linux_STA_v2.4.0.0/Makefile
+--- 2010_07_16_RT2860_Linux_STA_v2.4.0.0.old/Makefile	2010-07-08 07:55:39.000000000 -0400
++++ 2010_07_16_RT2860_Linux_STA_v2.4.0.0/Makefile	2010-08-29 16:28:25.000000000 -0400
+@@ -234,13 +234,6 @@ test:
  	$(MAKE) -C tools test
  
  LINUX:
@@ -15,11 +15,11 @@ diff -rupN 2010_01_29_RT2860_Linux_STA_v2.3.0.0.old/Makefile 2010_01_29_RT2860_L
  	cp -f os/linux/Makefile.6 $(RT28xx_DIR)/os/linux/Makefile
  ifeq ($(PLATFORM),DM6446)
  	$(MAKE)  ARCH=arm CROSS_COMPILE=arm_v5t_le- -C  $(LINUX_SRC) SUBDIRS=$(RT28xx_DIR)/os/linux modules
-@@ -194,34 +187,21 @@ else
+@@ -252,34 +245,21 @@ else
  endif
  endif
  
--endif
+-endif	
  
  clean:
  ifeq ($(TARGET), LINUX)
@@ -50,10 +50,10 @@ diff -rupN 2010_01_29_RT2860_Linux_STA_v2.3.0.0.old/Makefile 2010_01_29_RT2860_L
  endif
 -endif
  
-diff -rupN 2010_01_29_RT2860_Linux_STA_v2.3.0.0.old/os/linux/config.mk 2010_01_29_RT2860_Linux_STA_v2.3.0.0/os/linux/config.mk
---- 2010_01_29_RT2860_Linux_STA_v2.3.0.0.old/os/linux/config.mk	2010-04-22 02:35:11.000000000 -0400
-+++ 2010_01_29_RT2860_Linux_STA_v2.3.0.0/os/linux/config.mk	2010-04-22 02:41:47.000000000 -0400
-@@ -218,14 +218,9 @@ WFLAGS += -DRT_BIG_ENDIAN -DINF_TWINPASS
+diff -rupN 2010_07_16_RT2860_Linux_STA_v2.4.0.0.old/os/linux/config.mk 2010_07_16_RT2860_Linux_STA_v2.4.0.0/os/linux/config.mk
+--- 2010_07_16_RT2860_Linux_STA_v2.4.0.0.old/os/linux/config.mk	2010-07-09 04:58:09.000000000 -0400
++++ 2010_07_16_RT2860_Linux_STA_v2.4.0.0/os/linux/config.mk	2010-08-29 16:29:34.000000000 -0400
+@@ -250,14 +250,9 @@ WFLAGS += -DRT_BIG_ENDIAN -DINF_TWINPASS
  endif
  
  ifeq ($(PLATFORM),INF_DANUBE)
@@ -68,7 +68,7 @@ diff -rupN 2010_01_29_RT2860_Linux_STA_v2.3.0.0.old/os/linux/config.mk 2010_01_2
  
  ifeq ($(PLATFORM),INF_AR9)
  WFLAGS += -DRT_BIG_ENDIAN -DINF_AR9
-@@ -313,11 +308,7 @@ export CFLAGS
+@@ -349,11 +344,7 @@ export CFLAGS
  endif
  
  ifeq ($(PLATFORM),INF_DANUBE)
@@ -80,7 +80,7 @@ diff -rupN 2010_01_29_RT2860_Linux_STA_v2.3.0.0.old/os/linux/config.mk 2010_01_2
  export CFLAGS
  endif
  
-@@ -342,14 +333,8 @@ export CFLAGS
+@@ -383,14 +374,8 @@ export CFLAGS
  endif
  
  ifeq ($(PLATFORM),PC)
@@ -90,8 +90,39 @@ diff -rupN 2010_01_29_RT2860_Linux_STA_v2.3.0.0.old/os/linux/config.mk 2010_01_2
 -	export CFLAGS
 -    else
  	# Linux 2.6
- 	EXTRA_CFLAGS := $(WFLAGS) -DMODVERSIONS -I$(RT28xx_DIR)/include
+ 	EXTRA_CFLAGS := $(WFLAGS) -I$(RT28xx_DIR)/include
 -    endif
  endif
  
- ifeq ($(PLATFORM),IXP)
+ #If the kernel version of RMI is newer than 2.6.27, please change "CFLAGS" to "EXTRA_FLAGS"
+@@ -441,11 +426,6 @@ export CFLAGS
+ endif
+ 
+ ifeq ($(PLATFORM),MT85XX)
+-    ifneq (,$(findstring 2.4,$(LINUX_SRC)))
+-	# Linux 2.4
+-	CFLAGS := -D__KERNEL__ -I$(LINUX_SRC)/include -I$(RT28xx_DIR)/include -O2 -fomit-frame-pointer -fno-strict-aliasing -fno-common -pipe -mpreferred-stack-boundary=2 -march=i686 -DMODULE -DMODVERSIONS -include $(LINUX_SRC)/include/linux/modversions.h $(WFLAGS)
+-	export CFLAGS
+-    else
+ 	# Linux 2.6
+ 	EXTRA_CFLAGS += $(WFLAGS) -I$(RT28xx_DIR)/include
+ 	EXTRA_CFLAGS += -D _NO_TYPEDEF_BOOL_ \
+@@ -458,18 +438,11 @@ ifeq ($(PLATFORM),MT85XX)
+ 	                -D _NO_TYPEDEF_INT32_ \
+ 	                -D _NO_TYPEDEF_INT64_ \
+ 	                
+-    endif
+ endif
+ 
+ ifeq ($(PLATFORM),NXP_TV550)
+-    ifneq (,$(findstring 2.4,$(LINUX_SRC)))
+-        # Linux 2.4
+-        CFLAGS := -D__KERNEL__ -I$(LINUX_SRC)/include -I$(RT28xx_DIR)/include -O2 -fomit-frame-pointer -fno-strict-aliasing -fno-common -pipe -mpreferred-stack-boundary=2 -march=mips -DMODULE -DMODVERSIONS -include $(LINUX_SRC)/include/linux/modversions.h $(WFLAGS)
+-        export CFLAGS
+-    else
+         # Linux 2.6
+         EXTRA_CFLAGS := $(WFLAGS) -I$(RT28xx_DIR)/include
+-    endif
+ endif
+ 
+ ifeq ($(PLATFORM),MVL5)
