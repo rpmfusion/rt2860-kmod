@@ -1,7 +1,7 @@
-diff -rupN 2009_0918_RT2860_Linux_STA_v2.2.0.0.old/os/linux/Makefile.6 2009_0918_RT2860_Linux_STA_v2.2.0.0/os/linux/Makefile.6
---- 2009_0918_RT2860_Linux_STA_v2.2.0.0.old/os/linux/Makefile.6	2009-09-13 23:50:36.000000000 -0400
-+++ 2009_0918_RT2860_Linux_STA_v2.2.0.0/os/linux/Makefile.6	2009-10-24 00:34:24.000000000 -0400
-@@ -105,15 +105,8 @@ clean:
+diff -rupN 2010_07_16_RT2860_Linux_STA_v2.4.0.0.old/os/linux/Makefile.6 2010_07_16_RT2860_Linux_STA_v2.4.0.0/os/linux/Makefile.6
+--- 2010_07_16_RT2860_Linux_STA_v2.4.0.0.old/os/linux/Makefile.6	2010-07-08 07:52:12.000000000 -0400
++++ 2010_07_16_RT2860_Linux_STA_v2.4.0.0/os/linux/Makefile.6	2010-08-29 16:26:26.000000000 -0400
+@@ -131,18 +131,11 @@ clean:
  	rm -f ../../sta/.*.{cmd,flags,d}
  
  install:
@@ -20,3 +20,6 @@ diff -rupN 2009_0918_RT2860_Linux_STA_v2.2.0.0.old/os/linux/Makefile.6 2009_0918
 -	rm -rf $(addprefix $(LINUX_SRC_MODULE),$(addsuffix .ko,$(MOD_NAME)))
 -	/sbin/depmod -a ${shell uname -r}
 +	rm -rf $(addprefix $(INST_DIR),$(addsuffix .ko,$(MOD_NAME)))
+ 
+ # Declare the contents of the .PHONY variable as phony.  We keep that
+ # information in a variable so we can use it in if_changed and friends.

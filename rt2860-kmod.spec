@@ -3,10 +3,10 @@
 # "buildforkernels newest" macro for just that build; immediately after
 # queuing that build enable the macro again for subsequent builds; that way
 # a new akmod package will only get build when a new one is actually needed
-%define buildforkernels newest
+#define buildforkernels newest
 
 Name:		rt2860-kmod
-Version:	2.3.0.0
+Version:	2.4.0.0
 Release:	1%{?dist}
 Summary:	Kernel module for RaLink 802.11 wireless devices rt2760/rt2790/rt2860/rt2890
 
@@ -14,7 +14,7 @@ Group:		System Environment/Kernel
 License:	GPLv2+
 URL:		http://www.ralinktech.com/support.php?s=2
 # No direct downloads anymore. See the above link.
-Source0:	2010_01_29_RT2860_Linux_STA_v2.3.0.0.tar.bz2
+Source0:	2010_07_16_RT2860_Linux_STA_v2.4.0.0.tar.gz
 Source11:	rt2860-kmodtool-excludekernel-filterfile
 
 Patch1:		rt2860-dat-install-fixes.patch
@@ -48,6 +48,9 @@ pushd *RT2860*Linux*STA*
 %patch2 -p1 -b .NetworkManager
 %patch4 -p1 -b .no24
 %patch6 -p1 -b .messageflood
+ for ext in c h; do
+  find . -name "*.$ext" -exec chmod -x {} \;
+ done
 popd
 
 for kernel_version in %{?kernel_versions} ; do
@@ -72,6 +75,9 @@ chmod 0755 $RPM_BUILD_ROOT/%{kmodinstdir_prefix}/*/%{kmodinstdir_postfix}/*
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Sun Aug 29 2010 Orcan Ogetbil <oget [DOT] fedora [AT] gmail [DOT] com> - 2.4.0.0-1
+- version update (2.4.0.0)
+
 * Thu Apr 22 2010 Orcan Ogetbil <oget [DOT] fedora [AT] gmail [DOT] com> - 2.3.0.0-1
 - version update (2.3.0.0)
 
