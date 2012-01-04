@@ -7,7 +7,7 @@
 
 Name:		rt2860-kmod
 Version:	2.4.0.0
-Release:	2%{?dist}.17
+Release:	2%{?dist}.18
 Summary:	Kernel module for RaLink 802.11 wireless devices rt2760/rt2790/rt2860/rt2890
 
 Group:		System Environment/Kernel
@@ -75,6 +75,9 @@ chmod 0755 $RPM_BUILD_ROOT/%{kmodinstdir_prefix}/*/%{kmodinstdir_postfix}/*
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Wed Jan 04 2012 Nicolas Chauvet <kwizart@gmail.com> - 2.4.0.0-2.18
+- rebuild for updated kernel
+
 * Fri Dec 23 2011 Nicolas Chauvet <kwizart@gmail.com> - 2.4.0.0-2.17
 - rebuild for updated kernel
 
